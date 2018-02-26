@@ -1,16 +1,16 @@
 ﻿namespace InsurancePolicy.Core.Enums
 {
-    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
 
     public enum InsuranceTypeEnum
     {
-        [Description("Terremoto")]
+        [Display(Name = "Terremoto")]
         Earthquake,
-        [Description("Incendio")]
+        [Display(Name = "Incendio")]
         Fire,
-        [Description("Pérdida")]
+        [Display(Name = "Pérdida")]
         Lost,
-        [Description("Robo")]
+        [Display(Name = "Robo")]
         Stole             
     }
 }

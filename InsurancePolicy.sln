@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsurancePolicy.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsurancePolicy.Infrastructure.Test", "InsurancePolicy.Infrastructure.Test\InsurancePolicy.Infrastructure.Test.csproj", "{720D4711-307B-4459-823F-25FDAF028C72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsurancePolicy.Web", "InsurancePolicy.Web\InsurancePolicy.Web.csproj", "{0ABE4653-8F70-4E2D-82AB-8931EB7B24AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{720D4711-307B-4459-823F-25FDAF028C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{720D4711-307B-4459-823F-25FDAF028C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720D4711-307B-4459-823F-25FDAF028C72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABE4653-8F70-4E2D-82AB-8931EB7B24AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABE4653-8F70-4E2D-82AB-8931EB7B24AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABE4653-8F70-4E2D-82AB-8931EB7B24AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABE4653-8F70-4E2D-82AB-8931EB7B24AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

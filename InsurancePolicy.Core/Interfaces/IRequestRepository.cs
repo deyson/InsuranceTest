@@ -9,5 +9,6 @@
         void Remove(int id);
         IEnumerable<Request> GetRequests();
         IEnumerable<Request> GetRequestsByClient(string clientId);
+        Request FindById(int id);
     }
 }

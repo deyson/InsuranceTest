@@ -1,6 +1,8 @@
 ﻿namespace InsurancePolicy.Infrastructure.Test
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
     using System.Linq;
     using InsurancePolicy.Core;
@@ -57,6 +59,32 @@
             repository.Remove(3);
             var result = repository.FindById(3);
             Assert.IsNull(result);
+        }
+
+
+        [TestMethod]
+        public void InsuranceValidationRuleCoverageRisk()
+        {
+            Insurance insurance = new Insurance
+            {
+                Id = 3,
+                Name = "Seguro test",
+                Coverage = 70,
+                Description = "Póliza de Seguro TEST",
+                Period = 15,
+                Price = 1285000,
+                Risk = RiskEnum.High,
+                Type = InsuranceTypeEnum.Fire,
+                Validity = DateTime.Now.AddMonths(4)
+            };
+
+            // Act
+            var validationResults = new List<ValidationResult>();
+            var actual = Validator.TryValidateObject(insurance, new ValidationContext(insurance), validationResults, true);
+
+            // Assert
+            Assert.IsFalse(actual, "Validaciómn de regla de negocio exitosa.");
+            Assert.AreEqual(1, validationResults.Count, "Póliza que incumple regla de negocio Cobertura-Riesgo.");
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿namespace InsurancePolicy.Core.Enums
 {
-    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
 
     public enum RiskEnum
     {
-        [Description("Bajo")]
+        [Display(Name = "Bajo")]
         Low,
-        [Description("Medio")]
+        [Display(Name = "Medio")]
         Medium,
-        [Description("Medio-Alto")]
+        [Display(Name = "Medio-Alto")]
         MediumHigh,
-        [Description("Alto")]
+        [Display(Name = "Alto")]
         High
     }
 }

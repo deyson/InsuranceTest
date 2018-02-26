@@ -1,6 +1,7 @@
 ﻿namespace InsurancePolicy.Infrastructure.Repositories
 {
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
 
     using InsurancePolicy.Core;
@@ -18,7 +19,14 @@
 
         public void Edit(Request request)
         {
-            context.Entry(request).State = System.Data.Entity.EntityState.Modified;
+            context.Entry(request).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+
+        public Request FindById(int id)
+        {
+            var result = (from r in context.Requests where r.Id == id select r).FirstOrDefault();
+            return result;
         }
 
         public IEnumerable<Request> GetRequests()
@@ -28,7 +36,7 @@
 
         public IEnumerable<Request> GetRequestsByClient(string clientId)
         {
-            var result = (from i in context.Requests where i.ClientId == clientId select i).ToList();
+            var result = (from r in context.Requests where r.ClientId == clientId select r).ToList();
             return result;
         }
 

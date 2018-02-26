@@ -1,6 +1,7 @@
 ﻿namespace InsurancePolicy.Infrastructure.Repositories
 {    
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
 
     using InsurancePolicy.Core;
@@ -18,7 +19,8 @@
 
         public void Edit(Insurance insurance)
         {
-            context.Entry(insurance).State = System.Data.Entity.EntityState.Modified;
+            context.Entry(insurance).State = EntityState.Modified;
+            context.SaveChanges();
         }
 
         public Insurance FindById(int id)
