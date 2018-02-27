@@ -1,16 +1,20 @@
 ﻿namespace InsurancePolicy.Core.Enums
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
     using System.ComponentModel.DataAnnotations;
+    using System.Runtime.Serialization;
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum InsuranceTypeEnum
     {
-        [Display(Name = "Terremoto")]
+        [EnumMember(Value = "Terremoto")]
         Earthquake,
-        [Display(Name = "Incendio")]
+        [EnumMember(Value = "Incendio")]
         Fire,
-        [Display(Name = "Pérdida")]
+        [EnumMember(Value = "Pérdida")]
         Lost,
-        [Display(Name = "Robo")]
+        [EnumMember(Value = "Robo")]
         Stole             
     }
 }

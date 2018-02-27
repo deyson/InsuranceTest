@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using InsurancePolicy.Web.Providers;
 
 namespace InsurancePolicy.Web
 {
@@ -18,7 +19,8 @@ namespace InsurancePolicy.Web
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new ApplicationAuthenticationHandler());
         }
     }
 }

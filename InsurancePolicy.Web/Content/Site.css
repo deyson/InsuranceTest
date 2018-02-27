@@ -16,3 +16,16 @@ textarea {
     max-width: 280px;
 }
 
+.glyphicon {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.actions {
+    text-align: center;
+}
+
+.actions span {
+    letter-spacing: 8px;
+}
+

@@ -26,7 +26,7 @@
             {
                 Id = 2,
                 Name = "Seguro vehicular",
-                Coverage = 80,
+                Coverage = 10,
                 Description = "Póliza de Seguro Vehículo",
                 Period = 5,
                 Price = 785000,
@@ -37,14 +37,20 @@
             context.Requests.Add(new Request
             {
                 Id = 1,
-                ClientId = "deyson@gmail.com",
+                ClientId = "usuaior123@gmail.com",
                 InsuranceId = 1
             });
             context.Requests.Add(new Request
             {
                 Id = 1,
-                ClientId = "ludifi@gmail.com",
+                ClientId = "usuario456@gmail.com",
                 InsuranceId = 2
+            });
+            context.Requests.Add(new Request
+            {
+                Id = 1,
+                ClientId = "usuario456@gmail.com",
+                InsuranceId = 1
             });
             context.SaveChanges();
             base.Seed(context);

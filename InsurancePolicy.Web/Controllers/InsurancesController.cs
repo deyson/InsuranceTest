@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
 using InsurancePolicy.Core;
 using InsurancePolicy.Core.Interfaces;
-
+using InsurancePolicy.Infrastructure;
 
 namespace InsurancePolicy.Web.Controllers
 {
-    public class InsurancesController : Controller
+    public class InsurancesController : ApiController
     {
         IInsuranceRepository db;
 
@@ -21,110 +23,104 @@ namespace InsurancePolicy.Web.Controllers
             this.db = db;
         }
 
-        // GET: Insurances
-        public ActionResult Index()
+        // GET: api/Insurances
+        [Authorize]
+        public IQueryable<Insurance> GetInsurances()
         {
-            return View(db.GetInsurances());
+            return db.GetInsurances().AsQueryable();
         }
 
-        // GET: Insurances/Details/5
-        public ActionResult Details(int? id)
+        // GET: api/Insurances/5
+        [ResponseType(typeof(Insurance))]
+        [Authorize]
+        public IHttpActionResult GetInsurance(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Insurance insurance = db.FindById(Convert.ToInt32(id));
+            Insurance insurance = db.FindById(id);
             if (insurance == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(insurance);
+
+            return Ok(insurance);
         }
 
-        // GET: Insurances/Create
-        public ActionResult Create()
+        // PUT: api/Insurances/5
+        [ResponseType(typeof(void))]
+        [Authorize]
+        public IHttpActionResult PutInsurance(int id, Insurance insurance)
         {
-            return View();
-        }
-
-        // POST: Insurances/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,Type,Coverage,Validity,Period,Price,Risk")] Insurance insurance)
-        {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Add(insurance);
-                return RedirectToAction("Index");
+                return BadRequest(ModelState);
             }
 
-            return View(insurance);
-        }
-
-        // GET: Insurances/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
+            if (id != insurance.Id)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
-            Insurance insurance = db.FindById(Convert.ToInt32(id));
-            if (insurance == null)
-            {
-                return HttpNotFound();
-            }
-            return View(insurance);
-        }
-
-        // POST: Insurances/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,Type,Coverage,Validity,Period,Price,Risk")] Insurance insurance)
-        {
-            if (ModelState.IsValid)
+                        
+            try
             {
                 db.Edit(insurance);
-                return RedirectToAction("Index");
             }
-            return View(insurance);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InsuranceExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: Insurances/Delete/5
-        public ActionResult Delete(int? id)
+        // POST: api/Insurances
+        [ResponseType(typeof(Insurance))]
+        [Authorize]
+        public IHttpActionResult PostInsurance(Insurance insurance)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest(ModelState);
             }
-            Insurance insurance = db.FindById(Convert.ToInt32(id));
+
+            db.Add(insurance);
+
+            return CreatedAtRoute("DefaultApi", new { id = insurance.Id }, insurance);
+        }
+
+        // DELETE: api/Insurances/5
+        [ResponseType(typeof(Insurance))]
+        [Authorize]
+        public IHttpActionResult DeleteInsurance(int id)
+        {
+            Insurance insurance = db.FindById(id);
             if (insurance == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(insurance);
-        }
 
-        // POST: Insurances/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
             db.Remove(id);
-            return RedirectToAction("Index");
+
+            return Ok(insurance);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-              //  db.Dispose();
+                //db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private bool InsuranceExists(int id)
+        {
+            return db.GetInsurances().Any(e => e.Id == id);
         }
     }
 }

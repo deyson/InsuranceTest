@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+using System.Web.Http.Description;
 using InsurancePolicy.Core;
 using InsurancePolicy.Core.Interfaces;
 
 namespace InsurancePolicy.Web.Controllers
 {
-    public class RequestsController : Controller
+    public class RequestsController : ApiController
     {
         IRequestRepository db;
 
@@ -20,110 +17,104 @@ namespace InsurancePolicy.Web.Controllers
             this.db = db;
         }
 
-        // GET: Requests
-        public ActionResult Index()
+        // GET: api/Requests
+        [Authorize]
+        public IQueryable<Request> GetRequests()
         {
-            return View(db.GetRequests());
+            return db.GetRequests().AsQueryable();
         }
 
-        // GET: Requests/Details/5
-        public ActionResult Details(int? id)
+        // GET: api/Requests/5
+        [ResponseType(typeof(Request))]
+        [Authorize]
+        public IHttpActionResult GetRequest(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Request request = db.FindById(Convert.ToInt32(id));
+            Request request = db.FindById(id);
             if (request == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(request);
+
+            return Ok(request);
         }
 
-        // GET: Requests/Create
-        public ActionResult Create()
+        // PUT: api/Requests/5
+        [Authorize]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutRequest(int id, Request request)
         {
-            return View();
-        }
-
-        // POST: Requests/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ClientId,InsuranceId")] Request request)
-        {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Add(request);
-                return RedirectToAction("Index");
+                return BadRequest(ModelState);
             }
 
-            return View(request);
-        }
-
-        // GET: Requests/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
+            if (id != request.Id)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
-            Request request = db.FindById(Convert.ToInt32(id));
-            if (request == null)
-            {
-                return HttpNotFound();
-            }
-            return View(request);
-        }
 
-        // POST: Requests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ClientId,InsuranceId")] Request request)
-        {
-            if (ModelState.IsValid)
+            try
             {
                 db.Edit(request);
-                return RedirectToAction("Index");
             }
-            return View(request);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RequestExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: Requests/Delete/5
-        public ActionResult Delete(int? id)
+        // POST: api/Requests
+        [ResponseType(typeof(Request))]
+        [Authorize]
+        public IHttpActionResult PostRequest(Request request)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest(ModelState);
             }
-            Request request = db.FindById(Convert.ToInt32(id));
+
+            db.Add(request);
+
+            return CreatedAtRoute("DefaultApi", new { id = request.Id }, request);
+        }
+
+        // DELETE: api/Requests/5
+        [ResponseType(typeof(Request))]
+        [Authorize]
+        public IHttpActionResult DeleteRequest(int id)
+        {
+            Request request = db.FindById(id);
             if (request == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(request);
-        }
 
-        // POST: Requests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
             db.Remove(id);
-            return RedirectToAction("Index");
+
+            return Ok(request);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-               // db.Dispose();
+                //db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private bool RequestExists(int id)
+        {
+            return db.GetRequests().Any(e => e.Id == id);
         }
     }
 }

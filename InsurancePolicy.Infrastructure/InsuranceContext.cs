@@ -7,6 +7,9 @@
     {
         public InsuranceContext()
         {
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<InsuranceContext>());
+            InsuranceInitializeDB db = new InsuranceInitializeDB();
+            Database.SetInitializer(db);
         }
 
         public DbSet<Insurance> Insurances { get; set; }

@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "Pólizas de Seguros";
+}
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/InsuranceCrud.js"></script>
+<h2>Pólizas de Seguros</h2>
+<div ng-app="myApp">
+    <div ng-controller="myCtrl" ng-init="GetAllData()" class="divList">
+        <div class="table-responsive">
+            <table cellpadding="12" class="table table-bordered table-hover">
+                <tr>
+                    <td>
+                        <b>ID</b>
+                    </td>
+                    <td>
+                        <b>Nombre</b>
+                    </td>
+                    <td>
+                        <b>Descripción</b>
+                    </td>
+                    <td>
+                        <b>Tipo</b>
+                    </td>
+                    <td>
+                        <b>Covertura</b>
+                    </td>
+                    <td>
+                        <b>Inicio vigencia</b>
+                    </td>
+                    <td>
+                        <b>Periodo <br /> (meses)</b>
+                    </td>
+                    <td>
+                        <b>Precio</b>
+                    </td>
+                    <td>
+                        <b>Riesgo</b>
+                    </td>
+                    <td>
+                        <b>Acciones</b>
+                    </td>
+                </tr>
+                <tr ng-repeat="Ins in insurances">
+                    <td>
+                        {{Ins.Id}}
+                    </td>
+                    <td>
+                        {{Ins.Name}}
+                    </td>
+                    <td>
+                        {{Ins.Description}}
+                    </td>
+                    <td>
+                        {{Ins.Type}}
+                    </td>
+                    <td>
+                        {{Ins.Coverage}}%
+                    </td>
+                    <td>
+                        {{Ins.Validity  | date :  "dd.MM.y" }}
+                    </td>
+                    <td>
+                        {{Ins.Period}}
+                    </td>
+                    <td>
+                        {{Ins.Price | currency}}
+                    </td>
+                    <td>
+                        {{Ins.Risk}}
+                    </td>
+                    <td class="actions">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true" ng-click="UpdateInsurance(Ins)"></span>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="DeleteInsurance(Ins)"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="form-horizontal" role="form">
+            <div class="container">
+                <div class="row">
+                    <h2>
+                        <span id="spn">Adicionar Póliza de Seguro</span>
+                    </h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Nombre:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="inputName" ng-model="InsName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Descripción:</label>
+                            <div class="col-md-8">
+                                <textarea type="text" class="form-control" id="inputDescription" ng-model="InsDescription"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Tipo:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="SelectType" ng-model="InsType">
+                                    <option>Incendio</option>
+                                    <option>Pérdida</option>
+                                    <option>Robo</option>
+                                    <option>Terremoto</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Cobertura:</label>
+                            <div class="col-md-8">
+                                <input type="number" class="form-control" id="inputCoverage" ng-model="InsCoverage">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Validez:</label>
+                            <div class="col-md-8">
+                                <input type="date" class="form-control" id="inputValidity" ng-model="InsValidity">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Periodo:</label>
+                            <div class="col-md-8">
+                                <input type="number" class="form-control" id="inputPeriod" placeholder="meses" ng-model="InsPeriod">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Precio:</label>
+                            <div class="col-md-8">
+                                <input type="number" class="form-control" id="inputPrice" ng-model="InsPrice">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Riesgo:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="SelectRisk" ng-model="InsRisk">
+                                    <option>Bajo</option>
+                                    <option>Medio</option>
+                                    <option>Medio-Alto</option>
+                                    <option>Alto</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-5">
+                        <button type="button" class="btn btn-success btn-lg" ng-click="InsertData()">
+                            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> <span id="btnSave">Guardar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("InsID_")
+
+</div>

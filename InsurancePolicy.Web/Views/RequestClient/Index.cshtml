@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "Solcitudes de Pólizas de Seguros";
+}
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/RequestClient.js"></script>
+<h2>Asignaciones / Cancelaciones de Pólizas</h2>
+<div ng-app="myApp">
+    <div ng-controller="myCtrl" ng-init="GetAllData()" class="divList">
+        <div class="table-responsive">
+            <table cellpadding="12" class="table table-bordered table-hover">
+                <tr>
+                    <td>
+                        <b>ID</b>
+                    </td>
+                    <td>
+                        <b>Cliente</b>
+                    </td>
+                    <td>
+                        <b>Póliza</b>
+                    </td>
+                    <td>
+                        <b>Precio</b>
+                    </td>
+                    <td>
+                        <b>Tipo</b>
+                    </td>
+                    <td>
+                        <b>Cobertura</b>
+                    </td>
+                    <td>
+                        <b>Cancelar</b>
+                    </td>
+                </tr>
+                <tr ng-repeat="Req in requests">
+                    <td>
+                        {{Req.Id}}
+                    </td>
+                    <td>
+                        {{Req.ClientId}}
+                    </td>
+                    <td>
+                        {{Req.Insurance.Name}}
+                    </td>
+                    <td>
+                        {{Req.Insurance.Price | currency}}
+                    </td>
+                    <td>
+                        {{Req.Insurance.Type}}
+                    </td>
+                    <td>
+                        {{Req.Insurance.Coverage}}%
+                    </td>                  
+                    <td class="actions">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="DeleteRequest(Req)"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="form-horizontal" role="form">
+            <div class="container">
+                <div class="row">
+                    <h2>
+                        <span id="spn">Asignación Póliza de Seguro</span>
+                    </h2>
+                </div>
+                <div class="row">                              
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Cliente:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="SelectClient" ng-model="ReqClient">
+                                    <option>usuaior123@gmail.com</option>
+                                    <option>usuaior456@gmail.com</option>
+                                    <option>usuaior789@gmail.com</option>
+                                    <option>usuario147@gmail.com</option>
+                                    <option>usuario258@gmail.com</option>
+                                    <option>usuario369@gmail.com</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>                   
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Póliza:</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="SelectInsurance" ng-model="ReqInsurance">                                     
+                                    <option ng-repeat="i in insurances" value="{{i.Id}}">{{i.Name}}</option>
+                                </select>                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-5">
+                        <button type="button" class="btn btn-success btn-lg" ng-click="InsertData()">
+                            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> <span id="btnSave">Guardar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("ReqsID_")
+
+</div>

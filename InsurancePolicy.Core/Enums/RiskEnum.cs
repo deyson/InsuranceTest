@@ -1,16 +1,20 @@
 ﻿namespace InsurancePolicy.Core.Enums
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
     using System.ComponentModel.DataAnnotations;
+    using System.Runtime.Serialization;
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum RiskEnum
     {
-        [Display(Name = "Bajo")]
+        [EnumMember(Value = "Bajo")]
         Low,
-        [Display(Name = "Medio")]
+        [EnumMember(Value = "Medio")]
         Medium,
-        [Display(Name = "Medio-Alto")]
+        [EnumMember(Value = "Medio-Alto")]
         MediumHigh,
-        [Display(Name = "Alto")]
+        [EnumMember(Value = "Alto")]
         High
     }
 }

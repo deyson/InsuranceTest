@@ -5,12 +5,13 @@
     using System.ComponentModel.DataAnnotations;
 
     using InsurancePolicy.Core.Enums;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     public class Insurance : IValidatableObject
     {
         public int Id { get; set; }
 
-        [Required]
         [Display(Name="Nombre")]
 
         public string Name { get; set; }
@@ -19,6 +20,7 @@
         public string Description { get; set; }
 
         [Display(Name = "Póliza")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public InsuranceTypeEnum Type { get; set; }
 
         [Display(Name = "Cubrimiento")]
@@ -36,6 +38,7 @@
         public decimal Price { get; set; }
 
         [Display(Name = "Tipo de riesgo")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public RiskEnum Risk { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
